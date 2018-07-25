@@ -1,6 +1,6 @@
 #myCanvas {
   /* background-image: url('../assets/nou.jpg');
-  background-size: contain; */
+  background-size: cover; */
   background-color: green;
   display: block;
   margin: 150px auto;
