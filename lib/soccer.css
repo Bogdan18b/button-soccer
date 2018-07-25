@@ -1,0 +1,16 @@
+#myCanvas {
+  /* background-image: url('../assets/nou.jpg');
+  background-size: contain; */
+  background-color: green;
+  display: block;
+  margin: 150px auto;
+  width: 1200px;
+  height: 600px;
+}
+
+body {
+  /* background-image: url('../assets/nou.jpg');
+  background-repeat: no-repeat;
+  background-size: cover; */
+  background-color: black;
+}
