@@ -3,7 +3,7 @@
   background-size: cover; */
   background-color: green;
   display: block;
-  margin: 150px auto;
+  margin: 80px auto;
   width: 1200px;
   height: 600px;
 }
@@ -12,5 +12,49 @@ body {
   /* background-image: url('../assets/nou.jpg');
   background-repeat: no-repeat;
   background-size: cover; */
-  background-color: black;
+  background-color: navy;
+}
+h1 {
+  display: flex;
+  justify-content: center;
+  font-size: 50px;
+  color: cornflowerblue;
+  font-weight: bold;
+}
+
+p {
+  text-align: center;
+  color: cornflowerblue;
+  font-size: 20px;
+  padding: 10px;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: aliceblue;
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: -90px;
+}
+
+.player-one {
+  color: aliceblue;
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: -90px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.player-two {
+  color: aliceblue;
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: -90px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
