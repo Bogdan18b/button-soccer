@@ -1,0 +1,32 @@
+{
+  "name": "button_soccer",
+  "version": "1.0.0",
+  "description": "Button Soccer is a game created using vanilla javaScript, HTML and CSS. The game is played against a computer player and the winner is first to score 5 goals.",
+  "main": "main.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "webpack": "webpack --watch --mode=development",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bogdan18b/button-soccer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bogdan18b/button-soccer/issues"
+  },
+  "homepage": "https://github.com/Bogdan18b/button-soccer#readme",
+  "dependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "webpack": "^4.16.2",
+    "webpack-cli": "^3.1.0"
+  }
+}

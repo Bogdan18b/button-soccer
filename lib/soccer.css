@@ -1,5 +1,5 @@
 #myCanvas {
-  /* background-image: url('../assets/nou.jpg');
+  /* background-image: url('../assets/cl.jpg');
   background-size: cover; */
   background-color: green;
   display: block;
@@ -8,22 +8,29 @@
   height: 600px;
 }
 
+#scoreCanvas {
+  background-image: url('../assets/scoreboard.jpeg');
+  background-size: cover;
+  margin: -830px auto;
+  display: block;
+  width: 200px;
+  height: 100px;
+  border: 2px solid white;
+}
+
 body {
-  /* background-image: url('../assets/nou.jpg');
-  background-repeat: no-repeat;
-  background-size: cover; */
   background-color: navy;
 }
+
 h1 {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   font-size: 50px;
   color: cornflowerblue;
   font-weight: bold;
 }
 
 p {
-  text-align: center;
   color: cornflowerblue;
   font-size: 20px;
   padding: 10px;
