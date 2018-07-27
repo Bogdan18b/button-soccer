@@ -42,29 +42,19 @@ p {
   align-items: flex-end;
   color: aliceblue;
   font-size: 20px;
-  font-weight: 700;
   margin-top: -90px;
+  justify-content: center;
 }
 
-.player-one {
+.instructions {
   color: aliceblue;
   font-size: 18px;
-  font-weight: 700;
   margin-top: -90px;
   position: absolute;
-  bottom: 0;
-  left: 0;
+  bottom: 40px;
+  left: 10px;
 }
 
-.player-two {
-  color: aliceblue;
-  font-size: 18px;
-  font-weight: 700;
-  margin-top: -90px;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-}
 
 #congrats {
   position: absolute;
@@ -89,6 +79,14 @@ p {
   margin-top: 130px;
 }
 
+.bold {
+  font-weight: bold;
+  color: cornflowerblue;
+}
+
 .hide {
   display: none;
+}
+
+#audio {
 }

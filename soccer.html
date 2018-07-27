@@ -9,22 +9,24 @@
   <body>
     <h1>Button Soccer</h1>
     <p>first player to score 5 goals wins</p>
+
     <ul class="contact">
+      <li><audio controls autoplay loop id="audio">
+        <source src="./assets/UefaChampionsLeague.mp3" type="audio/mp3">
+        <source src="./assets/UefaChampionsLeague.ogg" type="audio/ogg">
+      </audio><li>
       <li>Contact Me</li>
       <li><a href="https://github.com/Bogdan18b">Github</a></li>
       <li><a href="https://www.linkedin.com/in/bogdanbobletec/">Linkedin</a></li>
       <li><a href="https://angel.co/bogdan-bobletec">AngelList</a></li>
 
-      <ul class="player-one">
-        <li>Player One</li>
+      <ul class="instructions">
+        <li class="bold">Player One</li>
         <li>Move up: W</li>
         <li>Move down: S</li>
         <li>Move left: A</li>
         <li>Move right: D</li>
-      </ul>
-
-      <ul class="player-two">
-        <li>Player Two</li>
+        <li class="bold">Player Two</li>
         <li>Move up: up</li>
         <li>Move down: down</li>
         <li>Move left: left</li>
@@ -35,6 +37,7 @@
         <li>Press button to play again!</li>
         <li><button id="reset">PLAY AGAIN</button></li>
       </ul>
+
     </ul>
     <canvas id="myCanvas"></canvas>
     <canvas id="scoreCanvas"></canvas>
