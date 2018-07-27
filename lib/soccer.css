@@ -1,5 +1,5 @@
 #myCanvas {
-  /* background-image: url('../assets/cl.jpg');
+  /* background-image: url('../assets/nou.jpg');
   background-size: cover; */
   background-color: green;
   display: block;
@@ -64,4 +64,31 @@ p {
   position: absolute;
   bottom: 0;
   right: 0;
+}
+
+#congrats {
+  position: absolute;
+  top: 205px;
+  left: 482px;
+  text-align: center;
+  border: 1px solid black;
+  width: 360px;
+  height: 100px;
+  padding: 40px;
+  background-image: url('../assets/logo.jpeg');
+  background-size: cover;
+  color: white;
+  font-size: 28px;
+}
+
+#reset {
+  border: 3px solid white;
+  border-radius: 5px;
+  background-color: navy;
+  padding: 15px;
+  margin-top: 130px;
+}
+
+.hide {
+  display: none;
 }
