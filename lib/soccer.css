@@ -68,8 +68,8 @@ p {
 
 #congrats {
   position: absolute;
-  top: 205px;
-  left: 482px;
+  top: -4px;
+  left: 740px;
   text-align: center;
   border: 1px solid black;
   width: 360px;
