@@ -1,10 +1,10 @@
 # Button Soccer
 
-Button Soccer is a game created using vanilla javaScript, HTML and CSS. The game is played against a computer player and the winner is first to score 5 goals.
-
+Button Soccer is a game created using vanilla javaScript, HTML and CSS. The game is for 2 players and the winner is first to score 5 goals.
+You can try it [here](http://www.bogdanbobletec.us/soccer/soccer.html).
 ## Wireframes
 
-![soccer](https://raw.githubusercontent.com/Bogdan18b/button-soccer/master/assets/soccer.png)
+![soccer](https://raw.githubusercontent.com/Bogdan18b/button-soccer/master/assets/screen.png)
 
 ## Implementation Timeline
 
@@ -19,5 +19,3 @@ Create players and game logic.
 ### Day 3
 
 Improve everything and try to add a lot of interactivity.
-
-...more details coming soon.
