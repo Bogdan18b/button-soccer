@@ -42,16 +42,14 @@ p {
   align-items: flex-end;
   color: aliceblue;
   font-size: 20px;
-  margin-top: -90px;
+  margin-top: -130px;
   justify-content: center;
 }
 
-.instructions {
+#instructions {
   color: aliceblue;
   font-size: 18px;
-  margin-top: -90px;
   position: absolute;
-  bottom: 0;
   left: 10px;
 }
 
@@ -88,5 +86,8 @@ p {
   display: none;
 }
 
-#audio {
+audio {
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
