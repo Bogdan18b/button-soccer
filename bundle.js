@@ -314,19 +314,19 @@ var playerTwoX = y + 120;
 var playerTwoY = y;
 
 var ballVelocity = {
-  x: 2,
-  y: 2.5
+  x: 4.6,
+  y: 4.2
 };
 
 var playerVelocity = {
-  x: 3,
-  y: 3
+  x: 4,
+  y: 4
 };
 
-var dx = 0.5;
+var dx = 1;
 
-var ballRadius = 3;
-var playerRadius = 8;
+var ballRadius = 10;
+var playerRadius = 35;
 
 var goalsPlayerOne = 0;
 var goalsPlayerTwo = 0;
@@ -363,12 +363,12 @@ var playerMove = function playerMove() {
   }
 };
 
-var keeperOneX = 35;
-var keeperTwoX = w - 35;
+var keeperOneX = 125;
+var keeperTwoX = w - 125;
 var keeperY = y - 20;
 
 var moveKeepers = function moveKeepers() {
-  if (keeperY > y + 20 || keeperY < y - 20) {
+  if (keeperY > y + 125 || keeperY < y - 125) {
     dx = -dx;
   }
 };
@@ -405,7 +405,7 @@ var draw = function draw() {
   if ((0, _game.getDistance)(keeperTwoX, keeperY, playerRadius, playerX, playerY, playerRadius)) {
     playerX -= 15;
   }
-  if ((0, _game.getDistance)(keeperOneX, playerRadius, keeperY, playerX, playerY, playerRadius)) {
+  if ((0, _game.getDistance)(keeperOneX, keeperY, playerRadius, playerX, playerY, playerRadius)) {
     playerX += 5;
   }
   if ((0, _game.getDistance)(keeperTwoX, keeperY, playerRadius, playerTwoX, playerTwoY, playerRadius)) {
@@ -474,7 +474,7 @@ var Player = function () {
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
       ctx.fillStyle = this.fill;
       ctx.fill();
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 8;
       ctx.strokeStyle = this.border;
       ctx.stroke();
       ctx.closePath();
@@ -482,7 +482,7 @@ var Player = function () {
   }, {
     key: "moveGoalkeeper",
     value: function moveGoalkeeper(y) {
-      if (this.y > y + 20 || this.y < y - 20) {
+      if (this.y > y + 250 || this.y < y - 250) {
         this.velocity.x = -this.velocity.x;
       }
     }
@@ -510,19 +510,20 @@ Object.defineProperty(exports, "__esModule", {
 });
 var SoccerField = function SoccerField(ctx, h, w) {
 
-  var x = w / 2;
-  var y = h / 2;
+  var x = w / 2; // width is 1200px
+  var y = h / 2; //height is 600px
+  var square = w / 24; // 50px also h/12
 
   ctx.beginPath(); // center line
   ctx.moveTo(x, 0);
-  ctx.lineTo(x, 600);
+  ctx.lineTo(x, h);
   ctx.lineWidth = 2;
   ctx.strokeStyle = "white";
   ctx.stroke();
 
   ctx.beginPath(); // left side line
-  ctx.moveTo(20, 0);
-  ctx.lineTo(20, 600);
+  ctx.moveTo(square, 0);
+  ctx.lineTo(square, h);
   ctx.lineWidth = 2;
   ctx.strokeStyle = "white";
   ctx.stroke();
@@ -542,110 +543,110 @@ var SoccerField = function SoccerField(ctx, h, w) {
   ctx.stroke();
 
   ctx.beginPath(); // right side line
-  ctx.moveTo(w - 20, 0);
-  ctx.lineTo(w - 20, 600);
+  ctx.moveTo(23 * square, 0);
+  ctx.lineTo(23 * square, h);
   ctx.lineWidth = 2;
   ctx.strokeStyle = "white";
   ctx.stroke();
 
-  ctx.beginPath(); // 16 yard left side line
-  ctx.moveTo(20, y - 51);
-  ctx.lineTo(71, y - 51);
-  ctx.lineTo(71, y + 51);
-  ctx.lineTo(20, y + 51);
+  ctx.beginPath(); // 16 square left side line
+  ctx.moveTo(square, y / 3);
+  ctx.lineTo(4 * square, y / 3);
+  ctx.lineTo(4 * square, 5 * y / 3);
+  ctx.lineTo(square, 5 * y / 3);
   ctx.strokeStyle = "white";
   ctx.stroke();
 
-  ctx.beginPath(); // 6 yard left side line
-  ctx.moveTo(20, y - 27);
-  ctx.lineTo(37, y - 27);
-  ctx.lineTo(37, y + 27);
-  ctx.lineTo(20, y + 27);
+  ctx.beginPath(); // 6 square left side line
+  ctx.moveTo(square, y - 3 * square);
+  ctx.lineTo(2.5 * square, y - 3 * square);
+  ctx.lineTo(2.5 * square, y + 3 * square);
+  ctx.lineTo(square, y + 3 * square);
   ctx.strokeStyle = "white";
   ctx.stroke();
 
-  ctx.beginPath(); // 16 yard right side line
-  ctx.moveTo(w - 20, y - 51);
-  ctx.lineTo(w - 71, y - 51);
-  ctx.lineTo(w - 71, y + 51);
-  ctx.lineTo(w - 20, y + 51);
+  ctx.beginPath(); // 16 square right side line
+  ctx.moveTo(w - square, y / 3);
+  ctx.lineTo(w - 4 * square, y / 3);
+  ctx.lineTo(w - 4 * square, 5 * y / 3);
+  ctx.lineTo(w - square, 5 * y / 3);
   ctx.strokeStyle = "white";
   ctx.stroke();
 
-  ctx.beginPath(); // 6 yard right side line
-  ctx.moveTo(w - 20, y - 27);
-  ctx.lineTo(w - 37, y - 27);
-  ctx.lineTo(w - 37, y + 27);
-  ctx.lineTo(w - 20, y + 27);
+  ctx.beginPath(); // 6 square right side line
+  ctx.moveTo(w - square, y - 3 * square);
+  ctx.lineTo(w - 2.5 * square, y - 3 * square);
+  ctx.lineTo(w - 2.5 * square, y + 3 * square);
+  ctx.lineTo(w - square, y + 3 * square);
   ctx.strokeStyle = "white";
   ctx.stroke();
 
   ctx.beginPath(); // center field circle
-  ctx.arc(x, y, 20, 0, Math.PI * 2, false);
+  ctx.arc(x, y, 100, 0, Math.PI * 2, false);
   ctx.strokeStyle = "white";
   ctx.stroke();
   ctx.closePath();
 
   ctx.beginPath(); // left side semicircle
-  ctx.arc(x - 80, y, 20, Math.PI * 1.5, Math.PI / 2, false);
+  ctx.arc(4 * square, y, 100, Math.PI * 1.5, Math.PI / 2, false);
   ctx.strokeStyle = "white";
   ctx.stroke();
   ctx.closePath();
 
   ctx.beginPath(); // right side semicircle
-  ctx.arc(w - 70, y, 20, Math.PI / 2, Math.PI * 1.5, false);
+  ctx.arc(w - 4 * square, y, 100, Math.PI / 2, Math.PI * 1.5, false);
   ctx.strokeStyle = "white";
   ctx.stroke();
   ctx.closePath();
 
   ctx.beginPath(); // small center field circle
-  ctx.arc(x, y, 2, 0, Math.PI * 2, false);
-  ctx.strokeStyle = "white";
-  ctx.stroke();
+  ctx.arc(x, y, 3, 0, Math.PI * 2, false);
+  ctx.fillStyle = "white";
+  ctx.fill();
   ctx.closePath();
 
   ctx.beginPath(); // small left side circle
-  ctx.arc(50, y, 2, 0, Math.PI * 2, false);
+  ctx.arc(3.3 * square, y, 3, 0, Math.PI * 2, false);
   ctx.fillStyle = "white";
   ctx.fill();
   ctx.closePath();
 
   ctx.beginPath(); // small right side circle
-  ctx.arc(w - 50, y, 2, 0, Math.PI * 2, false);
+  ctx.arc(w - 3.3 * square, y, 3, 0, Math.PI * 2, false);
   ctx.fillStyle = "white";
   ctx.fill();
   ctx.closePath();
 
   ctx.beginPath();
-  ctx.rect(1, y - 20, 19, 40); //left goal
+  ctx.rect(0, y - 2 * square, square, 4 * square); //left goal
   ctx.strokeStyle = "white";
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.rect(w - 20, y - 20, 19, 40); //right goal
+  ctx.rect(w - square, y - 2 * square, square, 4 * square); //right goal
   ctx.strokeStyle = "white";
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.rect(0, 0, 19, y - 21); // left top side
+  ctx.rect(0, 0, square - 1, 4 * square - 1); // left top side
   ctx.fillStyle = "navy";
   ctx.fill();
   ctx.closePath();
 
   ctx.beginPath();
-  ctx.rect(0, y + 21, 19, y - 21); // left bottom side
+  ctx.rect(0, y + 2 * square + 1, square - 1, 4.5 * square); // left bottom side
   ctx.fillStyle = "navy";
   ctx.fill();
   ctx.closePath();
 
   ctx.beginPath();
-  ctx.rect(w - 19, 0, 19, y - 21); // right top side
+  ctx.rect(w - square + 1, 0, square - 1, 4 * square - 1); // right top side
   ctx.fillStyle = "navy";
   ctx.fill();
   ctx.closePath();
 
   ctx.beginPath();
-  ctx.rect(w - 19, y + 21, 19, y - 21); // right bottom side
+  ctx.rect(w - square + 1, y + 2 * square + 1, square - 1, 4.5 * square); // right bottom side
   ctx.fillStyle = "navy";
   ctx.fill();
   ctx.closePath();
