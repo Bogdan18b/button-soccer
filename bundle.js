@@ -307,15 +307,15 @@ var rand = Math.floor((Math.random() - 0.5) * 10);
 var ballX = x + rand;
 var ballY = y + rand;
 
-var playerX = y + 40;
+var playerX = x - 150;
 var playerY = y;
 
-var playerTwoX = y + 120;
+var playerTwoX = x + 150;
 var playerTwoY = y;
 
 var ballVelocity = {
-  x: 6,
-  y: 7
+  x: 8,
+  y: 6
 };
 
 var playerVelocity = {
@@ -325,7 +325,7 @@ var playerVelocity = {
 
 var dx = 1;
 
-var ballRadius = 10;
+var ballRadius = 15;
 var playerRadius = 35;
 
 var goalsPlayerOne = 0;
@@ -381,10 +381,10 @@ var draw = function draw() {
   var field = new _soccer_field2.default(ctx, h, w);
   field.draw();
   var ball = new _ball2.default(ctx, ballX, ballY, ballRadius, ballVelocity);
-  var player1 = new _player2.default(ctx, playerX, playerY, playerRadius, "#FF0000", "#0000FF", playerVelocity);
-  var player2 = new _player2.default(ctx, playerTwoX, playerTwoY, playerRadius, "#FFFFFF", "#FF0000", playerVelocity);
-  var goalkeeper1 = new _player2.default(ctx, keeperOneX, keeperY, playerRadius, "#FF0000", "#0000FF", playerVelocity);
-  var goalkeeper2 = new _player2.default(ctx, keeperTwoX, keeperY, playerRadius, "#FFFFFF", "#FF0000", playerVelocity);
+  var player1 = new _player2.default(ctx, playerX, playerY, playerRadius, "#FF0000", "#0000FF", playerVelocity, "18");
+  var player2 = new _player2.default(ctx, playerTwoX, playerTwoY, playerRadius, "#FFFFFF", "#FF0000", playerVelocity, "10");
+  var goalkeeper1 = new _player2.default(ctx, keeperOneX, keeperY, playerRadius, "#FF0000", "#0000FF", playerVelocity, "1");
+  var goalkeeper2 = new _player2.default(ctx, keeperTwoX, keeperY, playerRadius, "#FFFFFF", "#FF0000", playerVelocity, "1");
   ball.onField(w, h);
   playerMove();
 
@@ -398,10 +398,10 @@ var draw = function draw() {
     ballY = y + rand;
   }
 
-  if ((0, _game.getDistance)(playerX, playerY, playerRadius, ballX, ballY, ballRadius) || (0, _game.getDistance)(playerTwoX, playerTwoY, playerRadius, ballX, ballY, ballRadius) || (0, _game.getDistance)(keeperOneX, keeperY, playerRadius, ballX, ballY, ballRadius) || (0, _game.getDistance)(keeperTwoX, keeperY, playerRadius, ballX, ballY, ballRadius)) {
-    ballVelocity.y = -ballVelocity.y;
-    ballVelocity.x = -ballVelocity.x;
-  }
+  player1.shoot(ball);
+  player2.shoot(ball);
+  goalkeeper1.shoot(ball);
+  goalkeeper2.shoot(ball);
 
   if ((0, _game.getDistance)(keeperTwoX, keeperY, playerRadius, playerX, playerY, playerRadius)) {
     playerX -= 15;
@@ -451,10 +451,12 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _game = __webpack_require__(/*! ./game */ "./lib/game.js");
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Player = function () {
-  function Player(ctx, x, y, radius, fill, border, velocity) {
+  function Player(ctx, x, y, radius, fill, border, velocity, num) {
     _classCallCheck(this, Player);
 
     this.ctx = ctx;
@@ -464,24 +466,41 @@ var Player = function () {
     this.fill = fill;
     this.border = border;
     this.velocity = velocity;
+    this.num = num;
     this.draw();
   }
 
   _createClass(Player, [{
-    key: "draw",
+    key: 'draw',
     value: function draw() {
       var ctx = this.ctx;
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
       ctx.fillStyle = this.fill;
       ctx.fill();
-      ctx.lineWidth = 8;
+      ctx.lineWidth = 15;
       ctx.strokeStyle = this.border;
       ctx.stroke();
+      this.number();
       ctx.closePath();
     }
   }, {
-    key: "moveGoalkeeper",
+    key: 'number',
+    value: function number() {
+      this.ctx.font = 'bold 30px arial';
+      this.ctx.fillStyle = 'black';
+      this.ctx.textAlign = 'center';
+      this.ctx.fillText(this.num, this.x, this.y + 10);
+    }
+  }, {
+    key: 'shoot',
+    value: function shoot(ball) {
+      if ((0, _game.getDistance)(this.x, this.y, this.radius, ball.x, ball.y, ball.radius)) {
+        ball.velocity.x = -ball.velocity.x;
+      }
+    }
+  }, {
+    key: 'moveGoalkeeper',
     value: function moveGoalkeeper(y) {
       if (this.y > y + 250 || this.y < y - 250) {
         this.velocity.x = -this.velocity.x;

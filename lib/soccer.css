@@ -4,11 +4,9 @@
   background-color: green;
   display: block;
   margin: 80px auto;
-  /* width: 1200px;
-  height: 600px; */
-  /* image-rendering: auto;
+  image-rendering: auto;
   image-rendering: crisp-edges;
-  image-rendering: pixelated; */
+  image-rendering: pixelated;
 }
 
 #scoreCanvas {
@@ -93,4 +91,10 @@ audio {
   position: absolute;
   right: 0;
   bottom: 0;
+}
+
+#controls {
+  display: inline-block;
+  color: aliceblue;
+  text-decoration: underline;
 }
