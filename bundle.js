@@ -315,7 +315,7 @@ var playerTwoY = y;
 
 var ballVelocity = {
   x: 6,
-  y: 6
+  y: 7
 };
 
 var playerVelocity = {
