@@ -129,7 +129,7 @@ var Ball = function () {
   }, {
     key: "onField",
     value: function onField(w, h) {
-      if ((this.y + this.velocity.y < 50 + this.radius || this.y + this.velocity.y > 90 + this.radius) && this.x + this.velocity.x > w - 20 - this.radius || (this.y + this.velocity.y < 50 + this.radius || this.y + this.velocity.y > 90 + this.radius) && this.x + this.velocity.x < 20 + this.radius) {
+      if ((this.y + this.velocity.y < h / 2 - 100 + this.radius || this.y + this.velocity.y > h / 2 + 100 + this.radius) && this.x + this.velocity.x > w - 50 - this.radius || (this.y + this.velocity.y < h / 2 - 100 + this.radius || this.y + this.velocity.y > h / 2 + 100 + this.radius) && this.x + this.velocity.x < 50 + this.radius) {
         this.velocity.x = -this.velocity.x;
       }
       if (this.y + this.velocity.y > h - this.radius || this.y + this.velocity.y < this.radius) {
@@ -140,9 +140,9 @@ var Ball = function () {
     key: "score",
     value: function score(fieldWidth) {
       var rand = Math.floor((Math.random() - 0.5) * 10);
-      if (this.x > fieldWidth - 10 - this.radius && this.y + this.velocity.y > 50 + this.radius && this.y + this.velocity.y < 90 + this.radius) {
+      if (this.x + this.radius > fieldWidth - 40 && this.y + this.radius > 200 && this.y + this.radius < 400) {
         return 1;
-      } else if (this.y + this.velocity.y > 50 + this.radius && this.y + this.velocity.y < 90 + this.radius && this.x + this.velocity.x < 10 + this.radius) {
+      } else if (this.x + this.radius < 40 && this.y + this.radius > 200 && this.y + this.radius < 400) {
         return 2;
       }
     }
@@ -314,8 +314,8 @@ var playerTwoX = y + 120;
 var playerTwoY = y;
 
 var ballVelocity = {
-  x: 4.6,
-  y: 4.2
+  x: 6,
+  y: 6
 };
 
 var playerVelocity = {
@@ -378,7 +378,8 @@ var draw = function draw() {
   ctxBoard.clearRect(0, 0, w, h);
   ctx.clearRect(0, 0, w, h);
   (0, _game.drawScore)(ctxBoard, goalsPlayerOne, goalsPlayerTwo);
-  (0, _soccer_field2.default)(ctx, h, w);
+  var field = new _soccer_field2.default(ctx, h, w);
+  field.draw();
   var ball = new _ball2.default(ctx, ballX, ballY, ballRadius, ballVelocity);
   var player1 = new _player2.default(ctx, playerX, playerY, playerRadius, "#FF0000", "#0000FF", playerVelocity);
   var player2 = new _player2.default(ctx, playerTwoX, playerTwoY, playerRadius, "#FFFFFF", "#FF0000", playerVelocity);
@@ -508,149 +509,233 @@ exports.default = Player;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var SoccerField = function SoccerField(ctx, h, w) {
 
-  var x = w / 2; // width is 1200px
-  var y = h / 2; //height is 600px
-  var square = w / 24; // 50px also h/12
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  ctx.beginPath(); // center line
-  ctx.moveTo(x, 0);
-  ctx.lineTo(x, h);
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = "white";
-  ctx.stroke();
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  ctx.beginPath(); // left side line
-  ctx.moveTo(square, 0);
-  ctx.lineTo(square, h);
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = "white";
-  ctx.stroke();
+var SoccerField = function () {
+  function SoccerField(ctx, height, width) {
+    _classCallCheck(this, SoccerField);
 
-  ctx.beginPath(); // top line
-  ctx.moveTo(20, 1);
-  ctx.lineTo(w - 20, 1);
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = "white";
-  ctx.stroke();
+    this.ctx = ctx;
+    this.height = height;
+    this.width = width;
+    this.x = this.width / 2; // width is 1200px
+    this.y = this.height / 2; //height is 600px
+    this.square = this.width / 24; // 50px also h/12
+  }
 
-  ctx.beginPath(); // bottom line
-  ctx.moveTo(20, h - 1);
-  ctx.lineTo(w - 20, h - 1);
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = "white";
-  ctx.stroke();
+  _createClass(SoccerField, [{
+    key: "draw",
+    value: function draw() {
+      this.ctx.lineWidth = 2;
+      this.ctx.strokeStyle = "white";
+      this.ctx.fillStyle = "white";
+      this.centerLine();
+      this.leftSideLine();
+      this.rightSideLine();
+      this.topLine();
+      this.bottomLine();
+      this.leftSideBigBox();
+      this.rightSideBigBox();
+      this.leftSideSmallBox();
+      this.rightSideSmallBox();
+      this.centerFieldCircle();
+      this.leftSideSemicircle();
+      this.rightSideSemicircle();
+      this.centerFieldDot();
+      this.leftSideDot();
+      this.rightSideDot();
+      this.leftGoal();
+      this.rightGoal();
+      this.leftTopSide();
+      this.leftBottomSide();
+      this.rightTopSide();
+      this.rightBottomSide();
+    }
+  }, {
+    key: "centerLine",
+    value: function centerLine() {
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.x, 0);
+      this.ctx.lineTo(this.x, this.height);
+      this.ctx.stroke();
+    }
+  }, {
+    key: "leftSideLine",
+    value: function leftSideLine() {
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.square, 0);
+      this.ctx.lineTo(this.square, this.height);
+      this.ctx.stroke();
+    }
+  }, {
+    key: "topLine",
+    value: function topLine() {
+      this.ctx.beginPath();
+      this.ctx.moveTo(20, 1);
+      this.ctx.lineTo(this.width - 20, 1);
+      this.ctx.stroke();
+    }
+  }, {
+    key: "bottomLine",
+    value: function bottomLine() {
+      this.ctx.beginPath();
+      this.ctx.moveTo(20, this.height - 1);
+      this.ctx.lineTo(this.width - 20, this.height - 1);
+      this.ctx.stroke();
+    }
+  }, {
+    key: "rightSideLine",
+    value: function rightSideLine() {
+      this.ctx.beginPath();
+      this.ctx.moveTo(23 * this.square, 0);
+      this.ctx.lineTo(23 * this.square, this.height);
+      this.ctx.stroke();
+    }
+  }, {
+    key: "leftSideBigBox",
+    value: function leftSideBigBox() {
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.square, this.y / 3);
+      this.ctx.lineTo(4 * this.square, this.y / 3);
+      this.ctx.lineTo(4 * this.square, 5 * this.y / 3);
+      this.ctx.lineTo(this.square, 5 * this.y / 3);
+      this.ctx.stroke();
+    }
+  }, {
+    key: "leftSideSmallBox",
+    value: function leftSideSmallBox() {
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.square, this.y - 3 * this.square);
+      this.ctx.lineTo(2.5 * this.square, this.y - 3 * this.square);
+      this.ctx.lineTo(2.5 * this.square, this.y + 3 * this.square);
+      this.ctx.lineTo(this.square, this.y + 3 * this.square);
+      this.ctx.stroke();
+    }
+  }, {
+    key: "rightSideBigBox",
+    value: function rightSideBigBox() {
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.width - this.square, this.y / 3);
+      this.ctx.lineTo(this.width - 4 * this.square, this.y / 3);
+      this.ctx.lineTo(this.width - 4 * this.square, 5 * this.y / 3);
+      this.ctx.lineTo(this.width - this.square, 5 * this.y / 3);
+      this.ctx.stroke();
+    }
+  }, {
+    key: "rightSideSmallBox",
+    value: function rightSideSmallBox() {
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.width - this.square, this.y - 3 * this.square);
+      this.ctx.lineTo(this.width - 2.5 * this.square, this.y - 3 * this.square);
+      this.ctx.lineTo(this.width - 2.5 * this.square, this.y + 3 * this.square);
+      this.ctx.lineTo(this.width - this.square, this.y + 3 * this.square);
+      this.ctx.stroke();
+    }
+  }, {
+    key: "centerFieldCircle",
+    value: function centerFieldCircle() {
+      this.ctx.beginPath();
+      this.ctx.arc(this.x, this.y, 100, 0, Math.PI * 2, false);
+      this.ctx.stroke();
+      this.ctx.closePath();
+    }
+  }, {
+    key: "leftSideSemicircle",
+    value: function leftSideSemicircle() {
+      this.ctx.beginPath();
+      this.ctx.arc(4 * this.square, this.y, 100, Math.PI * 1.5, Math.PI / 2, false);
+      this.ctx.stroke();
+      this.ctx.closePath();
+    }
+  }, {
+    key: "rightSideSemicircle",
+    value: function rightSideSemicircle() {
+      this.ctx.beginPath();
+      this.ctx.arc(this.width - 4 * this.square, this.y, 100, Math.PI / 2, Math.PI * 1.5, false);
+      this.ctx.stroke();
+      this.ctx.closePath();
+    }
+  }, {
+    key: "centerFieldDot",
+    value: function centerFieldDot() {
+      this.ctx.beginPath();
+      this.ctx.arc(this.x, this.y, 3, 0, Math.PI * 2, false);
+      this.ctx.fill();
+      this.ctx.closePath();
+    }
+  }, {
+    key: "leftSideDot",
+    value: function leftSideDot() {
+      this.ctx.beginPath();
+      this.ctx.arc(3.3 * this.square, this.y, 3, 0, Math.PI * 2, false);
+      this.ctx.fill();
+      this.ctx.closePath();
+    }
+  }, {
+    key: "rightSideDot",
+    value: function rightSideDot() {
+      this.ctx.beginPath();
+      this.ctx.arc(this.width - 3.3 * this.square, this.y, 3, 0, Math.PI * 2, false);
+      this.ctx.fill();
+      this.ctx.closePath();
+    }
+  }, {
+    key: "leftGoal",
+    value: function leftGoal() {
+      this.ctx.beginPath();
+      this.ctx.rect(0, this.y - 2 * this.square, this.square, 4 * this.square);
+      this.ctx.stroke();
+    }
+  }, {
+    key: "rightGoal",
+    value: function rightGoal() {
+      this.ctx.beginPath();
+      this.ctx.rect(this.width - this.square, this.y - 2 * this.square, this.square, 4 * this.square);
+      this.ctx.stroke();
+    }
+  }, {
+    key: "leftTopSide",
+    value: function leftTopSide() {
+      this.ctx.beginPath();
+      this.ctx.rect(0, 0, this.square - 1, 4 * this.square - 1);
+      this.ctx.fillStyle = "navy";
+      this.ctx.fill();
+      this.ctx.closePath();
+    }
+  }, {
+    key: "leftBottomSide",
+    value: function leftBottomSide() {
+      this.ctx.beginPath();
+      this.ctx.rect(0, this.y + 2 * this.square + 1, this.square - 1, 4 * this.square);
+      this.ctx.fillStyle = "navy";
+      this.ctx.fill();
+      this.ctx.closePath();
+    }
+  }, {
+    key: "rightTopSide",
+    value: function rightTopSide() {
+      this.ctx.beginPath();
+      this.ctx.rect(this.width - this.square + 1, 0, this.square - 1, 4 * this.square - 1);
+      this.ctx.fillStyle = "navy";
+      this.ctx.fill();
+      this.ctx.closePath();
+    }
+  }, {
+    key: "rightBottomSide",
+    value: function rightBottomSide() {
+      this.ctx.beginPath();
+      this.ctx.rect(this.width - this.square + 1, this.y + 2 * this.square + 1, this.square - 1, 4 * this.square); // right bottom side
+      this.ctx.fillStyle = "navy";
+      this.ctx.fill();
+      this.ctx.closePath();
+    }
+  }]);
 
-  ctx.beginPath(); // right side line
-  ctx.moveTo(23 * square, 0);
-  ctx.lineTo(23 * square, h);
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = "white";
-  ctx.stroke();
-
-  ctx.beginPath(); // 16 square left side line
-  ctx.moveTo(square, y / 3);
-  ctx.lineTo(4 * square, y / 3);
-  ctx.lineTo(4 * square, 5 * y / 3);
-  ctx.lineTo(square, 5 * y / 3);
-  ctx.strokeStyle = "white";
-  ctx.stroke();
-
-  ctx.beginPath(); // 6 square left side line
-  ctx.moveTo(square, y - 3 * square);
-  ctx.lineTo(2.5 * square, y - 3 * square);
-  ctx.lineTo(2.5 * square, y + 3 * square);
-  ctx.lineTo(square, y + 3 * square);
-  ctx.strokeStyle = "white";
-  ctx.stroke();
-
-  ctx.beginPath(); // 16 square right side line
-  ctx.moveTo(w - square, y / 3);
-  ctx.lineTo(w - 4 * square, y / 3);
-  ctx.lineTo(w - 4 * square, 5 * y / 3);
-  ctx.lineTo(w - square, 5 * y / 3);
-  ctx.strokeStyle = "white";
-  ctx.stroke();
-
-  ctx.beginPath(); // 6 square right side line
-  ctx.moveTo(w - square, y - 3 * square);
-  ctx.lineTo(w - 2.5 * square, y - 3 * square);
-  ctx.lineTo(w - 2.5 * square, y + 3 * square);
-  ctx.lineTo(w - square, y + 3 * square);
-  ctx.strokeStyle = "white";
-  ctx.stroke();
-
-  ctx.beginPath(); // center field circle
-  ctx.arc(x, y, 100, 0, Math.PI * 2, false);
-  ctx.strokeStyle = "white";
-  ctx.stroke();
-  ctx.closePath();
-
-  ctx.beginPath(); // left side semicircle
-  ctx.arc(4 * square, y, 100, Math.PI * 1.5, Math.PI / 2, false);
-  ctx.strokeStyle = "white";
-  ctx.stroke();
-  ctx.closePath();
-
-  ctx.beginPath(); // right side semicircle
-  ctx.arc(w - 4 * square, y, 100, Math.PI / 2, Math.PI * 1.5, false);
-  ctx.strokeStyle = "white";
-  ctx.stroke();
-  ctx.closePath();
-
-  ctx.beginPath(); // small center field circle
-  ctx.arc(x, y, 3, 0, Math.PI * 2, false);
-  ctx.fillStyle = "white";
-  ctx.fill();
-  ctx.closePath();
-
-  ctx.beginPath(); // small left side circle
-  ctx.arc(3.3 * square, y, 3, 0, Math.PI * 2, false);
-  ctx.fillStyle = "white";
-  ctx.fill();
-  ctx.closePath();
-
-  ctx.beginPath(); // small right side circle
-  ctx.arc(w - 3.3 * square, y, 3, 0, Math.PI * 2, false);
-  ctx.fillStyle = "white";
-  ctx.fill();
-  ctx.closePath();
-
-  ctx.beginPath();
-  ctx.rect(0, y - 2 * square, square, 4 * square); //left goal
-  ctx.strokeStyle = "white";
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.rect(w - square, y - 2 * square, square, 4 * square); //right goal
-  ctx.strokeStyle = "white";
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.rect(0, 0, square - 1, 4 * square - 1); // left top side
-  ctx.fillStyle = "navy";
-  ctx.fill();
-  ctx.closePath();
-
-  ctx.beginPath();
-  ctx.rect(0, y + 2 * square + 1, square - 1, 4.5 * square); // left bottom side
-  ctx.fillStyle = "navy";
-  ctx.fill();
-  ctx.closePath();
-
-  ctx.beginPath();
-  ctx.rect(w - square + 1, 0, square - 1, 4 * square - 1); // right top side
-  ctx.fillStyle = "navy";
-  ctx.fill();
-  ctx.closePath();
-
-  ctx.beginPath();
-  ctx.rect(w - square + 1, y + 2 * square + 1, square - 1, 4.5 * square); // right bottom side
-  ctx.fillStyle = "navy";
-  ctx.fill();
-  ctx.closePath();
-};
+  return SoccerField;
+}();
 
 exports.default = SoccerField;
 
