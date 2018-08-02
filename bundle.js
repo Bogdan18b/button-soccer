@@ -350,6 +350,8 @@ var deleteHumanPlayer = function deleteHumanPlayer() {
   playerTwoY = 0;
   playerTwoRadius = 0;
   document.getElementById("welcome").classList.add("hide");
+  goalsPlayerOne = 0;
+  goalsPlayerTwo = 0;
 };
 
 var deleteComputerPlayer = function deleteComputerPlayer() {
@@ -361,6 +363,8 @@ var deleteComputerPlayer = function deleteComputerPlayer() {
     y: 0
   };
   document.getElementById("welcome").classList.add("hide");
+  goalsPlayerOne = 0;
+  goalsPlayerTwo = 0;
 };
 
 document.addEventListener("keydown", _events_util.keyDownHandler, false);
@@ -408,7 +412,6 @@ var moveKeepers = function moveKeepers() {
 };
 
 var draw = function draw() {
-
   ctxBoard.clearRect(0, 0, w, h);
   ctx.clearRect(0, 0, w, h);
   (0, _game.drawScore)(ctxBoard, goalsPlayerOne, goalsPlayerTwo);
@@ -421,7 +424,7 @@ var draw = function draw() {
   var goalkeeper1 = new _player2.default(ctx, keeperOneX, keeperY, playerRadius, "#FF0000", "#0000FF", playerVelocity, "1");
   var goalkeeper2 = new _player2.default(ctx, keeperTwoX, keeperY, playerRadius, "#FFFFFF", "#FF0000", playerVelocity, "1");
   ball.onField(w, h);
-  player3.onField(w, h);
+  // player3.onField(w, h);
   playerMove();
   moveKeepers();
   if (ball.score(w) === 1) {
@@ -467,11 +470,32 @@ var draw = function draw() {
     playerX -= 5;
   }
 
+  // player3.moveComputer(ball, x, y);
   ballX += ballVelocity.x;
   ballY += ballVelocity.y;
-  player3X += computerPlayerVelocity.x;
-  player3Y += computerPlayerVelocity.y;
+  // player3X += computerPlayerVelocity.x;
+  // player3Y += computerPlayerVelocity.y;
   keeperY += dx;
+  if (ballX < x && ballY < y) {
+    player3X -= computerPlayerVelocity.x;
+    player3Y -= computerPlayerVelocity.y;
+  } else if (ballX < x && ballY > y) {
+    player3X -= computerPlayerVelocity.x;
+    player3Y += computerPlayerVelocity.y;
+  } else if (ballX > x && ballY < y) {
+    player3X += computerPlayerVelocity.x;
+    player3Y -= computerPlayerVelocity.y;
+  } else if (ballX > x && ballY > y) {
+    player3X += computerPlayerVelocity.x;
+    player3Y += computerPlayerVelocity.y;
+  }
+
+  // if (player3X + computerPlayerVelocity.x < computerRadius || player3X + computerPlayerVelocity.x > w - computerRadius) {
+  //   computerPlayerVelocity.x = -computerPlayerVelocity.x;
+  // }
+  // if (player3Y + computerPlayerVelocity.y > h - computerRadius || player3Y + computerPlayerVelocity.y < computerRadius) {
+  //   computerPlayerVelocity.y = -computerPlayerVelocity.y;
+  // }
 
   (0, _game.gameOver)(goalsPlayerOne, goalsPlayerTwo);
 
@@ -544,6 +568,7 @@ var Player = function () {
     value: function shoot(ball) {
       if ((0, _game.getDistance)(this.x, this.y, this.radius, ball.x, ball.y, ball.radius)) {
         ball.velocity.x = -ball.velocity.x;
+        // console.log(`x: ${this.x}--- y: ${this.y}`);
       }
     }
   }, {
@@ -562,6 +587,23 @@ var Player = function () {
         this.velocity.y = -this.velocity.y;
       }
     }
+
+    // moveComputer(ball, x, y) {
+    //   if (ball.x < x && ball.y < y) {
+    //     this.x -= this.velocity.x;
+    //     this.y -= this.velocity.y;
+    //   } else if (ball.x < x && ball.y > y) {
+    //     this.x -= this.velocity.x;
+    //     this.y += this.velocity.y;
+    //   } else if (ball.x > x && ball.y < y) {
+    //     this.x += this.velocity.x;
+    //     this.y -= this.velocity.y;
+    //   } else if (ball.x > x && ball.y > y) {
+    //     this.x += this.velocity.x;
+    //     this.y += this.velocity.y;
+    //   }
+    // }
+
   }]);
 
   return Player;
