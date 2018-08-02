@@ -14,8 +14,6 @@
   background-size: cover;
   margin: -830px auto;
   display: block;
-  width: 200px;
-  height: 100px;
   border: 2px solid white;
 }
 
@@ -54,8 +52,22 @@ p {
   left: 10px;
 }
 
-
 #congrats {
+  position: absolute;
+  top: 35px;
+  left: 744px;
+  text-align: center;
+  border: 1px solid black;
+  width: 360px;
+  height: 100px;
+  padding: 40px;
+  background-image: url('../assets/logo.jpeg');
+  background-size: cover;
+  color: white;
+  font-size: 28px;
+}
+
+#welcome {
   position: absolute;
   top: 35px;
   left: 744px;
@@ -98,3 +110,17 @@ audio {
   color: aliceblue;
   text-decoration: underline;
 }
+
+#human {
+  display: inline-block;
+  margin-top: 10px;
+  margin-left: 45px;
+  color: gold;
+  cursor: pointer;
+  }
+
+  #computer {
+    display: inline-block;
+    color: gold;
+    cursor: pointer;
+  }
