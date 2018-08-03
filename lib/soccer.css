@@ -21,6 +21,10 @@ body {
   background-color: navy;
 }
 
+html {
+  overflow: hidden;
+}
+
 h1 {
   display: flex;
   justify-content: flex-start;
@@ -48,7 +52,7 @@ p {
   color: aliceblue;
 }
 
-#instructions {
+.instructions {
   color: aliceblue;
   font-size: 18px;
   position: absolute;
@@ -68,8 +72,14 @@ p {
   font-size: 28px;
 }
 
-#congrats > li {
+#congrats > li:first-child {
   font-size: 50px;
+  color: cornflowerblue;
+  margin-bottom: 140px;
+}
+
+#congrats > li {
+  font-size: 30px;
   color: aliceblue;
 }
 
@@ -89,19 +99,18 @@ p {
 #welcome > li:first-child {
   font-size: 77px;
   color: cornflowerblue;
-  margin-bottom: 200px;
+  margin-bottom: 180px;
 }
 
 #reset {
-  border: 3px solid white;
-  border-radius: 5px;
+  border-radius: 13px;
   background-color: navy;
+  color: gold;
   padding: 15px;
-  margin-top: 130px;
+  margin-top: 50px;
 }
 
 .bold {
-  font-weight: bold;
   color: cornflowerblue;
 }
 
@@ -116,21 +125,33 @@ audio {
 }
 
 #controls {
-  display: inline-block;
   color: aliceblue;
-  text-decoration: underline;
-}
+    font-size: 20px;
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    width: 500px;}
 
 #human {
   display: inline-block;
-  margin-top: 10px;
+  margin-top: 40px;
   margin-left: 45px;
   color: gold;
   cursor: pointer;
+  display: inline-block;
+  background-color: navy;
+  padding: 7px;
+  width: 217px;
+  border-radius: 10px;
   }
 
   #computer {
     display: inline-block;
     color: gold;
     cursor: pointer;
+    display: inline-block;
+    background-color: navy;
+    padding: 7px;
+    width: 217px;
+    border-radius: 10px;
   }

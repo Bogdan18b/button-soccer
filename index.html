@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon" />
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="./lib/reset.css">
     <link rel="stylesheet" href="./lib/soccer.css">
     <title>button soccer</title>
@@ -11,25 +11,21 @@
   <body>
 
     <h1>Button Soccer</h1>
-    <p>First player to score 5 goals wins</p>
-    <p id="controls">Instructions</p>
+    <p class="play">First player to score 5 goals wins</p>
+    <p class="controls">Controls</p>
 
-    <ul id="instructions" class="hide">
+    <ul class="instructions">
       <li class="bold">Player One</li>
-      <li>Move up: W</li>
-      <li>Move down: S</li>
-      <li>Move left: A</li>
-      <li>Move right: D</li>
+      <li>W A S D</li>
       <li class="bold">Player Two</li>
-      <li>Move up: up</li>
-      <li>Move down: down</li>
-      <li>Move left: left</li>
-      <li>Move right: right</li>
+      <li>arrow keys</li>
     </ul>
 
     <ul id="congrats" class="hide">
       <li>Great game!</li>
-      <li>Press button to play again!</li>
+      <li>Final score</li>
+      <li>Player1 : Player2</li>
+      <li id="final-score"></li>
       <li><button id="reset">PLAY AGAIN</button></li>
     </ul>
 

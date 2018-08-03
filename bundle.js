@@ -130,19 +130,18 @@ var Ball = function () {
     key: "onField",
     value: function onField(w, h) {
       if ((this.y + this.velocity.y < h / 2 - 100 + this.radius || this.y + this.velocity.y > h / 2 + 100 + this.radius) && this.x + this.velocity.x > w - 50 - this.radius || (this.y + this.velocity.y < h / 2 - 100 + this.radius || this.y + this.velocity.y > h / 2 + 100 + this.radius) && this.x + this.velocity.x < 50 + this.radius) {
-        this.velocity.x = -this.velocity.x;
+        this.velocity.x *= -1;
       }
       if (this.y + this.velocity.y > h - this.radius || this.y + this.velocity.y < this.radius) {
-        this.velocity.y = -this.velocity.y;
+        this.velocity.y *= -1;
       }
     }
   }, {
     key: "score",
     value: function score(fieldWidth) {
-      var rand = Math.floor((Math.random() - 0.5) * 10);
-      if (this.x + this.radius > fieldWidth - 40 && this.y + this.radius > 200 && this.y + this.radius < 400) {
+      if (this.x > fieldWidth - 75 && this.y > 200 && this.y < 400) {
         return 1;
-      } else if (this.x + this.radius < 40 && this.y + this.radius > 200 && this.y + this.radius < 400) {
+      } else if (this.x < 75 && this.y > 200 && this.y < 400) {
         return 2;
       }
     }
@@ -178,7 +177,6 @@ var leftPressed2 = exports.leftPressed2 = false;
 var rightPressed2 = exports.rightPressed2 = false;
 
 var keyDownHandler = exports.keyDownHandler = function keyDownHandler(e) {
-  e.preventDefault();
   if (e.keyCode === 87) {
     exports.upPressed = upPressed = true;
   } else if (e.keyCode === 83) {
@@ -199,7 +197,6 @@ var keyDownHandler = exports.keyDownHandler = function keyDownHandler(e) {
 };
 
 var keyUpHandler = exports.keyUpHandler = function keyUpHandler(e) {
-  e.preventDefault();
   switch (e.keyCode) {
     case 87:
       exports.upPressed = upPressed = false;
@@ -245,7 +242,13 @@ var drawScore = exports.drawScore = function drawScore(ctx, x, y) {
 
 var gameOver = exports.gameOver = function gameOver(goalsPlayerOne, goalsPlayerTwo) {
   if (goalsPlayerOne === 5 || goalsPlayerTwo === 5) {
-    document.getElementById("congrats").classList.remove("hide");
+    var score = {
+      x: goalsPlayerOne,
+      y: goalsPlayerTwo
+    };
+    Object.freeze(score);
+    $("#final-score").html(score.x + " : " + score.y);
+    $("#congrats").removeClass("hide");
   }
 };
 
@@ -313,15 +316,15 @@ var playerY = y;
 var playerTwoX = x + 150;
 var playerTwoY = y;
 
-var player3X = x - 150;
-var player3Y = y;
+var player3X = x + 200;
+var player3Y = y + 100;
 
 var keeperOneX = 125;
 var keeperTwoX = w - 125;
 var keeperY = y - 20;
 
 var ballVelocity = {
-  x: 8,
+  x: 9,
   y: 6
 };
 
@@ -331,8 +334,8 @@ var computerPlayerVelocity = {
 };
 
 var playerVelocity = {
-  x: 4,
-  y: 4
+  x: 5,
+  y: 5
 };
 
 var dx = 1;
@@ -349,7 +352,7 @@ var deleteHumanPlayer = function deleteHumanPlayer() {
   playerTwoX = 0;
   playerTwoY = 0;
   playerTwoRadius = 0;
-  document.getElementById("welcome").classList.add("hide");
+  $("#welcome").addClass("hide");
   goalsPlayerOne = 0;
   goalsPlayerTwo = 0;
 };
@@ -362,24 +365,18 @@ var deleteComputerPlayer = function deleteComputerPlayer() {
     x: 0,
     y: 0
   };
-  document.getElementById("welcome").classList.add("hide");
+  $("#welcome").addClass("hide");
   goalsPlayerOne = 0;
   goalsPlayerTwo = 0;
 };
 
-document.addEventListener("keydown", _events_util.keyDownHandler, false);
-document.addEventListener("keyup", _events_util.keyUpHandler, false);
-document.getElementById("reset").addEventListener("click", _game.playAgain);
-document.getElementById("controls").addEventListener("mouseover", function () {
-  return document.getElementById("instructions").classList.remove("hide");
-});
-document.getElementById("controls").addEventListener("mouseout", function () {
-  return document.getElementById("instructions").classList.add("hide");
-});
-document.getElementById("computer").addEventListener("click", function () {
+$("body").keydown(_events_util.keyDownHandler);
+$("body").keyup(_events_util.keyUpHandler);
+$("#reset").click(_game.playAgain);
+$("#computer").click(function () {
   return deleteHumanPlayer();
 });
-document.getElementById("human").addEventListener("click", function () {
+$("#human").click(function () {
   return deleteComputerPlayer();
 });
 
@@ -411,6 +408,47 @@ var moveKeepers = function moveKeepers() {
   }
 };
 
+var moveMan = function moveMan() {
+
+  if (ballX < x && ballY < y) {
+    if (computerPlayerVelocity.x > 0) {
+      computerPlayerVelocity.x *= -1;
+    }
+    if (computerPlayerVelocity.y > 0) {
+      computerPlayerVelocity.y *= -1;
+    }
+    player3X -= computerPlayerVelocity.x;
+    player3Y -= computerPlayerVelocity.y;
+  } else if (ballX < x && ballY > y) {
+    if (computerPlayerVelocity.x > 0) {
+      computerPlayerVelocity.x *= -1;
+    }
+    if (computerPlayerVelocity.y > 0) {
+      computerPlayerVelocity.y *= -1;
+    }
+    player3X -= computerPlayerVelocity.x;
+    player3Y += computerPlayerVelocity.y;
+  } else if (ballX > x && ballY < y) {
+    if (computerPlayerVelocity.x > 0) {
+      computerPlayerVelocity.x *= -1;
+    }
+    if (computerPlayerVelocity.y > 0) {
+      computerPlayerVelocity.y *= -1;
+    }
+    player3X += computerPlayerVelocity.x;
+    player3Y -= computerPlayerVelocity.y;
+  } else if (ballX > x && ballY > y) {
+    if (computerPlayerVelocity.x > 0) {
+      computerPlayerVelocity.x *= -1;
+    }
+    if (computerPlayerVelocity.y > 0) {
+      computerPlayerVelocity.y *= -1;
+    }
+    player3X += computerPlayerVelocity.x;
+    player3Y += computerPlayerVelocity.y;
+  }
+};
+
 var draw = function draw() {
   ctxBoard.clearRect(0, 0, w, h);
   ctx.clearRect(0, 0, w, h);
@@ -424,7 +462,7 @@ var draw = function draw() {
   var goalkeeper1 = new _player2.default(ctx, keeperOneX, keeperY, playerRadius, "#FF0000", "#0000FF", playerVelocity, "1");
   var goalkeeper2 = new _player2.default(ctx, keeperTwoX, keeperY, playerRadius, "#FFFFFF", "#FF0000", playerVelocity, "1");
   ball.onField(w, h);
-  // player3.onField(w, h);
+  player3.onField(x, y);
   playerMove();
   moveKeepers();
   if (ball.score(w) === 1) {
@@ -470,32 +508,13 @@ var draw = function draw() {
     playerX -= 5;
   }
 
-  // player3.moveComputer(ball, x, y);
+  // player3d.moveComputer(ball, x, y);
   ballX += ballVelocity.x;
   ballY += ballVelocity.y;
-  // player3X += computerPlayerVelocity.x;
-  // player3Y += computerPlayerVelocity.y;
+  player3X += computerPlayerVelocity.x;
+  player3Y += computerPlayerVelocity.y;
   keeperY += dx;
-  if (ballX < x && ballY < y) {
-    player3X -= computerPlayerVelocity.x;
-    player3Y -= computerPlayerVelocity.y;
-  } else if (ballX < x && ballY > y) {
-    player3X -= computerPlayerVelocity.x;
-    player3Y += computerPlayerVelocity.y;
-  } else if (ballX > x && ballY < y) {
-    player3X += computerPlayerVelocity.x;
-    player3Y -= computerPlayerVelocity.y;
-  } else if (ballX > x && ballY > y) {
-    player3X += computerPlayerVelocity.x;
-    player3Y += computerPlayerVelocity.y;
-  }
-
-  // if (player3X + computerPlayerVelocity.x < computerRadius || player3X + computerPlayerVelocity.x > w - computerRadius) {
-  //   computerPlayerVelocity.x = -computerPlayerVelocity.x;
-  // }
-  // if (player3Y + computerPlayerVelocity.y > h - computerRadius || player3Y + computerPlayerVelocity.y < computerRadius) {
-  //   computerPlayerVelocity.y = -computerPlayerVelocity.y;
-  // }
+  // moveMan();
 
   (0, _game.gameOver)(goalsPlayerOne, goalsPlayerTwo);
 
@@ -579,31 +598,39 @@ var Player = function () {
     }
   }, {
     key: 'onField',
-    value: function onField(w, h) {
-      if (this.x + this.velocity.x < this.radius || this.x + this.velocity.x > w - this.radius) {
-        this.velocity.x = -this.velocity.x;
+    value: function onField(x, y) {
+      if (this.x + this.velocity.x < x - 400 || this.x + this.velocity.x > x + 400) {
+        this.velocity.x *= -1;
       }
-      if (this.y + this.velocity.y > h - this.radius || this.y + this.velocity.y < this.radius) {
-        this.velocity.y = -this.velocity.y;
+      if (this.y + this.velocity.y < y - 200 || this.y + this.velocity.y > y + 200) {
+        this.velocity.y *= -1;
       }
     }
-
-    // moveComputer(ball, x, y) {
-    //   if (ball.x < x && ball.y < y) {
-    //     this.x -= this.velocity.x;
-    //     this.y -= this.velocity.y;
-    //   } else if (ball.x < x && ball.y > y) {
-    //     this.x -= this.velocity.x;
-    //     this.y += this.velocity.y;
-    //   } else if (ball.x > x && ball.y < y) {
-    //     this.x += this.velocity.x;
-    //     this.y -= this.velocity.y;
-    //   } else if (ball.x > x && ball.y > y) {
-    //     this.x += this.velocity.x;
-    //     this.y += this.velocity.y;
-    //   }
-    // }
-
+  }, {
+    key: 'moveComputer',
+    value: function moveComputer(ball, x, y) {
+      if (this.velocity.x < 0) {
+        this.velocity.x *= -1;
+      }
+      if (this.velocity.y < 0) {
+        this.velocity.y *= -1;
+      }
+      // if (ball.x > x) {
+      //   this.velocity.x *= -1;
+      if (ball.x < x && ball.y < y) {
+        this.x -= this.velocity.x;
+        this.y -= this.velocity.y;
+      } else if (ball.x < x && ball.y > y) {
+        this.x -= this.velocity.x;
+        this.y += this.velocity.y;
+      } else if (ball.x > x && ball.y < y) {
+        this.x += this.velocity.x;
+        this.y -= this.velocity.y;
+      } else if (ball.x > x && ball.y > y) {
+        this.x += this.velocity.x;
+        this.y += this.velocity.y;
+      }
+    }
   }]);
 
   return Player;
