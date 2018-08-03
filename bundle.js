@@ -165,7 +165,7 @@ exports.default = Ball;
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 var upPressed = exports.upPressed = false;
 var downPressed = exports.downPressed = false;
@@ -177,45 +177,44 @@ var leftPressed2 = exports.leftPressed2 = false;
 var rightPressed2 = exports.rightPressed2 = false;
 
 var keyDownHandler = exports.keyDownHandler = function keyDownHandler(e) {
-  if (e.keyCode === 87) {
-    exports.upPressed = upPressed = true;
-  } else if (e.keyCode === 83) {
-    exports.downPressed = downPressed = true;
-  } else if (e.keyCode === 65) {
-    exports.leftPressed = leftPressed = true;
-  } else if (e.keyCode === 68) {
-    exports.rightPressed = rightPressed = true;
-  } else if (e.keyCode === 38) {
-    exports.upPressed2 = upPressed2 = true;
-  } else if (e.keyCode === 40) {
-    exports.downPressed2 = downPressed2 = true;
-  } else if (e.keyCode === 37) {
-    exports.leftPressed2 = leftPressed2 = true;
-  } else if (e.keyCode === 39) {
-    exports.rightPressed2 = rightPressed2 = true;
-  }
+    if (e.keyCode === 87) {
+        exports.upPressed = upPressed = true;
+    } else if (e.keyCode === 83) {
+        exports.downPressed = downPressed = true;
+    } else if (e.keyCode === 65) {
+        exports.leftPressed = leftPressed = true;
+    } else if (e.keyCode === 68) {
+        exports.rightPressed = rightPressed = true;
+    } else if (e.keyCode === 38) {
+        exports.upPressed2 = upPressed2 = true;
+    } else if (e.keyCode === 40) {
+        exports.downPressed2 = downPressed2 = true;
+    } else if (e.keyCode === 37) {
+        exports.leftPressed2 = leftPressed2 = true;
+    } else if (e.keyCode === 39) {
+        exports.rightPressed2 = rightPressed2 = true;
+    }
 };
 
 var keyUpHandler = exports.keyUpHandler = function keyUpHandler(e) {
-  switch (e.keyCode) {
-    case 87:
-      exports.upPressed = upPressed = false;
-    case 83:
-      exports.downPressed = downPressed = false;
-    case 65:
-      exports.leftPressed = leftPressed = false;
-    case 68:
-      exports.rightPressed = rightPressed = false;
-    case 38:
-      exports.upPressed2 = upPressed2 = false;
-    case 40:
-      exports.downPressed2 = downPressed2 = false;
-    case 37:
-      exports.leftPressed2 = leftPressed2 = false;
-    case 39:
-      exports.rightPressed2 = rightPressed2 = false;
-
-  }
+    //i used switch before i had issues when presseing 2 keys in the same time
+    if (e.keyCode === 87) {
+        exports.upPressed = upPressed = false;
+    } else if (e.keyCode === 83) {
+        exports.downPressed = downPressed = false;
+    } else if (e.keyCode === 65) {
+        exports.leftPressed = leftPressed = false;
+    } else if (e.keyCode === 68) {
+        exports.rightPressed = rightPressed = false;
+    } else if (e.keyCode === 38) {
+        exports.upPressed2 = upPressed2 = false;
+    } else if (e.keyCode === 40) {
+        exports.downPressed2 = downPressed2 = false;
+    } else if (e.keyCode === 37) {
+        exports.leftPressed2 = leftPressed2 = false;
+    } else if (e.keyCode === 39) {
+        exports.rightPressed2 = rightPressed2 = false;
+    }
 };
 
 /***/ }),
@@ -262,7 +261,7 @@ var getDistance = exports.getDistance = function getDistance(x1, y1, radius1, x2
 
   var dist = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
 
-  return dist < radius1 + radius2 ? true : false;
+  return dist < radius1 + radius2 + 15 ? true : false;
 };
 
 /***/ }),
@@ -456,11 +455,11 @@ var draw = function draw() {
   var field = new _soccer_field2.default(ctx, h, w);
   field.draw();
   var ball = new _ball2.default(ctx, ballX, ballY, ballRadius, ballVelocity);
-  var player1 = new _player2.default(ctx, playerX, playerY, playerRadius, "#FF0000", "#0000FF", playerVelocity, "18");
-  var player2 = new _player2.default(ctx, playerTwoX, playerTwoY, playerTwoRadius, "#FFFFFF", "#FF0000", playerVelocity, "10");
-  var player3 = new _player2.default(ctx, player3X, player3Y, computerRadius, "#FFFFFF", "#FF0000", computerPlayerVelocity, "9");
-  var goalkeeper1 = new _player2.default(ctx, keeperOneX, keeperY, playerRadius, "#FF0000", "#0000FF", playerVelocity, "1");
-  var goalkeeper2 = new _player2.default(ctx, keeperTwoX, keeperY, playerRadius, "#FFFFFF", "#FF0000", playerVelocity, "1");
+  var player1 = new _player2.default(ctx, playerX, playerY, playerRadius, "#FF0000", "#0000FF", playerVelocity, "A");
+  var player2 = new _player2.default(ctx, playerTwoX, playerTwoY, playerTwoRadius, "#FFFFFF", "#FF0000", playerVelocity, "B");
+  var player3 = new _player2.default(ctx, player3X, player3Y, computerRadius, "#FFFFFF", "#FF0000", computerPlayerVelocity, "B");
+  var goalkeeper1 = new _player2.default(ctx, keeperOneX, keeperY, playerRadius, "#FF0000", "#0000FF", playerVelocity, "A");
+  var goalkeeper2 = new _player2.default(ctx, keeperTwoX, keeperY, playerRadius, "#FFFFFF", "#FF0000", playerVelocity, "B");
   ball.onField(w, h);
   player3.onField(x, y);
   playerMove();
@@ -587,7 +586,7 @@ var Player = function () {
     value: function shoot(ball) {
       if ((0, _game.getDistance)(this.x, this.y, this.radius, ball.x, ball.y, ball.radius)) {
         ball.velocity.x = -ball.velocity.x;
-        // console.log(`x: ${this.x}--- y: ${this.y}`);
+        console.log('x: ' + this.x + '--- y: ' + this.y + '  ball' + ball.x + ' ' + ball.y);
       }
     }
   }, {
