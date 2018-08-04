@@ -113,7 +113,6 @@ var Ball = function () {
     this.y = y;
     this.radius = radius;
     this.velocity = velocity;
-    this.mass = 1;
     this.draw();
   }
 
@@ -140,9 +139,9 @@ var Ball = function () {
   }, {
     key: "score",
     value: function score(fieldWidth) {
-      if (this.x > fieldWidth - 75 && this.y > 200 && this.y < 400) {
+      if (this.x + this.radius > fieldWidth - 50 && this.y + this.radius > 200 && this.y - this.radius < 400) {
         return 1;
-      } else if (this.x < 75 && this.y > 200 && this.y < 400) {
+      } else if (this.x - this.radius < 50 && this.y + this.radius > 200 && this.y - this.radius < 400) {
         return 2;
       }
     }
@@ -231,85 +230,38 @@ var keyUpHandler = exports.keyUpHandler = function keyUpHandler(e) {
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 var drawScore = exports.drawScore = function drawScore(ctx, x, y) {
-    ctx.font = "70px Arial bold";
-    ctx.fillStyle = "white";
-    ctx.fillText(x, 20, 75);
-    ctx.fillText(y, 150, 75);
+  ctx.font = "70px Arial bold";
+  ctx.fillStyle = "white";
+  ctx.fillText(x, 20, 75);
+  ctx.fillText(y, 150, 75);
 };
 
 var gameOver = exports.gameOver = function gameOver(goalsPlayerOne, goalsPlayerTwo) {
-    if (goalsPlayerOne === 5 || goalsPlayerTwo === 5) {
-        var score = {
-            x: goalsPlayerOne,
-            y: goalsPlayerTwo
-        };
-        Object.freeze(score);
-        $("#final-score").html(score.x + " : " + score.y);
-        $("#congrats").removeClass("hide");
-    }
+  if (goalsPlayerOne === 5 || goalsPlayerTwo === 5) {
+    var score = {
+      x: goalsPlayerOne,
+      y: goalsPlayerTwo
+    };
+    Object.freeze(score);
+    $("#final-score").html(score.x + " : " + score.y);
+    $("#congrats").removeClass("hide");
+  }
 };
 
 var playAgain = exports.playAgain = function playAgain() {
-    document.location.reload();
+  document.location.reload();
 };
 
 var getDistance = exports.getDistance = function getDistance(x1, y1, radius1, x2, y2, radius2) {
-    var xDistance = x2 - x1;
-    var yDistance = y2 - y1;
+  var xDistance = x2 - x1;
+  var yDistance = y2 - y1;
 
-    var dist = Math.pow(xDistance, 2) + Math.pow(yDistance, 2);
-    var rad = Math.pow(radius1 + radius2, 2);
-    return dist <= rad ? true : false;
-};
-
-var rotate = exports.rotate = function rotate(velocity, angle) {
-    var rotatedVelocities = {
-        x: velocity.x * Math.cos(angle) - velocity.y * Math.sin(angle),
-        y: velocity.x * Math.sin(angle) + velocity.y * Math.cos(angle)
-    };
-
-    return rotatedVelocities;
-};
-
-var resolveCollision = exports.resolveCollision = function resolveCollision(player, ball) {
-    var xVelocityDiff = player.velocity.x - ball.velocity.x;
-    var yVelocityDiff = player.velocity.y - ball.velocity.y;
-
-    var xDist = ball.x - player.x;
-    var yDist = ball.y - player.y;
-
-    // Prevent accidental overlap of players
-    if (xVelocityDiff * xDist + yVelocityDiff * yDist >= 0) {
-
-        // Grab angle between the two colliding players
-        var angle = -Math.atan2(ball.y - player.y, ball.x - player.x);
-
-        // Store mass in var for better readability in collision equation
-        var m1 = player.mass;
-        var m2 = ball.mass;
-
-        // Velocity before equation
-        var u1 = rotate(player.velocity, angle);
-        var u2 = rotate(ball.velocity, angle);
-
-        // Velocity after 1d collision equation
-        var v1 = { x: u1.x * (m1 - m2) / (m1 + m2) + u2.x * 2 * m2 / (m1 + m2), y: u1.y };
-        var v2 = { x: u2.x * (m1 - m2) / (m1 + m2) + u1.x * 2 * m2 / (m1 + m2), y: u2.y };
-
-        // Final velocity after rotating axis back to original location
-        var vFinal1 = rotate(v1, -angle);
-        var vFinal2 = rotate(v2, -angle);
-
-        // Swap player velocities for realistic bounce effect
-        // player.velocity.x = vFinal1.x;
-        // player.velocity.y = vFinal1.y;
-
-        ball.velocity.x = u1.x;
-        ball.velocity.y = u1.y;
-    }
+  var dist = Math.pow(xDistance, 2) + Math.pow(yDistance, 2);
+  var rad = Math.pow(radius1 + radius2 + 10, 2);
+  return dist <= rad ? true : false;
 };
 
 /***/ }),
@@ -371,8 +323,8 @@ var keeperTwoX = w - 125;
 var keeperY = y - 20;
 
 var ballVelocity = {
-  x: 9,
-  y: 6
+  x: 10,
+  y: 7
 };
 
 var computerPlayerVelocity = {
@@ -464,11 +416,11 @@ var draw = function draw() {
   var field = new _soccer_field2.default(ctx, h, w);
   field.draw();
   var ball = new _ball2.default(ctx, ballX, ballY, ballRadius, ballVelocity);
-  var player1 = new _player2.default(ctx, playerX, playerY, playerRadius, "#FF0000", "#0000FF", playerVelocity, "A");
-  var player2 = new _player2.default(ctx, playerTwoX, playerTwoY, playerTwoRadius, "#FFFFFF", "#FF0000", playerVelocity, "B");
-  var player3 = new _player2.default(ctx, player3X, player3Y, computerRadius, "#FFFFFF", "#FF0000", computerPlayerVelocity, "B");
-  var goalkeeper1 = new _player2.default(ctx, keeperOneX, keeperY, playerRadius, "#FF0000", "#0000FF", playerVelocity, "A");
-  var goalkeeper2 = new _player2.default(ctx, keeperTwoX, keeperY, playerRadius, "#FFFFFF", "#FF0000", playerVelocity, "B");
+  var player1 = new _player2.default(ctx, playerX, playerY, playerRadius, playerVelocity, "A");
+  var player2 = new _player2.default(ctx, playerTwoX, playerTwoY, playerTwoRadius, playerVelocity, "B");
+  var player3 = new _player2.default(ctx, player3X, player3Y, computerRadius, computerPlayerVelocity, "B");
+  var goalkeeper1 = new _player2.default(ctx, keeperOneX, keeperY, playerRadius, playerVelocity, "A");
+  var goalkeeper2 = new _player2.default(ctx, keeperTwoX, keeperY, playerRadius, playerVelocity, "B");
   ball.onField(w, h);
   player3.onField(x, y);
   playerMove();
@@ -551,23 +503,32 @@ var _game = __webpack_require__(/*! ./game */ "./lib/game.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Player = function () {
-  function Player(ctx, x, y, radius, fill, border, velocity, num) {
+  function Player(ctx, x, y, radius, velocity, team) {
     _classCallCheck(this, Player);
 
+    this.team = team;
     this.ctx = ctx;
     this.x = x;
     this.y = y;
     this.radius = radius;
-    this.fill = fill;
-    this.border = border;
     this.velocity = velocity;
-    this.num = num;
-    this.mass = 1;
+    this.colors();
     this.draw();
   }
 
   _createClass(Player, [{
-    key: 'draw',
+    key: "colors",
+    value: function colors() {
+      if (this.team === "A") {
+        this.fill = "#FF0000";
+        this.border = "#0000FF";
+      } else {
+        this.fill = "#FFFFFF";
+        this.border = "#FF0000";
+      }
+    }
+  }, {
+    key: "draw",
     value: function draw() {
       var ctx = this.ctx;
       ctx.beginPath();
@@ -581,29 +542,28 @@ var Player = function () {
       ctx.closePath();
     }
   }, {
-    key: 'number',
+    key: "number",
     value: function number() {
       this.ctx.font = 'bold 30px arial';
       this.ctx.fillStyle = 'navy';
       this.ctx.textAlign = 'center';
-      this.ctx.fillText(this.num, this.x, this.y + 10);
+      this.ctx.fillText(this.team, this.x, this.y + 10);
     }
   }, {
-    key: 'shoot',
+    key: "shoot",
     value: function shoot(ball) {
       if ((0, _game.getDistance)(this.x, this.y, this.radius, ball.x, ball.y, ball.radius)) {
-        (0, _game.resolveCollision)(this, ball);
-        console.log('x: ' + this.x + '--- y: ' + this.y + '  ball' + ball.x + ' ' + ball.y);
+        ball.velocity.x *= -1;
       }
     }
   }, {
-    key: 'computerPlayer',
+    key: "computerPlayer",
     value: function computerPlayer(ball) {
       this.x += ball.velocity.x;
       this.y += ball.velocity.y;
     }
   }, {
-    key: 'onField',
+    key: "onField",
     value: function onField(x, y) {
       if (this.x < x - 400 || this.x > x + 400) {
         this.velocity.x *= -1;
