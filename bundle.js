@@ -113,6 +113,7 @@ var Ball = function () {
     this.y = y;
     this.radius = radius;
     this.velocity = velocity;
+    this.mass = 1;
     this.draw();
   }
 
@@ -129,10 +130,10 @@ var Ball = function () {
   }, {
     key: "onField",
     value: function onField(w, h) {
-      if ((this.y + this.velocity.y < h / 2 - 100 + this.radius || this.y + this.velocity.y > h / 2 + 100 + this.radius) && this.x + this.velocity.x > w - 50 - this.radius || (this.y + this.velocity.y < h / 2 - 100 + this.radius || this.y + this.velocity.y > h / 2 + 100 + this.radius) && this.x + this.velocity.x < 50 + this.radius) {
+      if ((this.y - this.radius < h / 2 - 100 || this.y + this.radius > h / 2 + 100) && this.x + this.radius > w - 50 || (this.y - this.radius < h / 2 - 100 || this.y + this.radius > h / 2 + 100) && this.x - this.radius < 50) {
         this.velocity.x *= -1;
       }
-      if (this.y + this.velocity.y > h - this.radius || this.y + this.velocity.y < this.radius) {
+      if (this.y + this.radius > h || this.y - this.radius < 0) {
         this.velocity.y *= -1;
       }
     }
@@ -230,38 +231,85 @@ var keyUpHandler = exports.keyUpHandler = function keyUpHandler(e) {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 var drawScore = exports.drawScore = function drawScore(ctx, x, y) {
-  ctx.font = "70px Arial bold";
-  ctx.fillStyle = "white";
-  ctx.fillText(x, 20, 75);
-  ctx.fillText(y, 150, 75);
+    ctx.font = "70px Arial bold";
+    ctx.fillStyle = "white";
+    ctx.fillText(x, 20, 75);
+    ctx.fillText(y, 150, 75);
 };
 
 var gameOver = exports.gameOver = function gameOver(goalsPlayerOne, goalsPlayerTwo) {
-  if (goalsPlayerOne === 5 || goalsPlayerTwo === 5) {
-    var score = {
-      x: goalsPlayerOne,
-      y: goalsPlayerTwo
-    };
-    Object.freeze(score);
-    $("#final-score").html(score.x + " : " + score.y);
-    $("#congrats").removeClass("hide");
-  }
+    if (goalsPlayerOne === 5 || goalsPlayerTwo === 5) {
+        var score = {
+            x: goalsPlayerOne,
+            y: goalsPlayerTwo
+        };
+        Object.freeze(score);
+        $("#final-score").html(score.x + " : " + score.y);
+        $("#congrats").removeClass("hide");
+    }
 };
 
 var playAgain = exports.playAgain = function playAgain() {
-  document.location.reload();
+    document.location.reload();
 };
 
 var getDistance = exports.getDistance = function getDistance(x1, y1, radius1, x2, y2, radius2) {
-  var xDistance = x2 - x1;
-  var yDistance = y2 - y1;
+    var xDistance = x2 - x1;
+    var yDistance = y2 - y1;
 
-  var dist = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+    var dist = Math.pow(xDistance, 2) + Math.pow(yDistance, 2);
+    var rad = Math.pow(radius1 + radius2, 2);
+    return dist <= rad ? true : false;
+};
 
-  return dist < radius1 + radius2 + 15 ? true : false;
+var rotate = exports.rotate = function rotate(velocity, angle) {
+    var rotatedVelocities = {
+        x: velocity.x * Math.cos(angle) - velocity.y * Math.sin(angle),
+        y: velocity.x * Math.sin(angle) + velocity.y * Math.cos(angle)
+    };
+
+    return rotatedVelocities;
+};
+
+var resolveCollision = exports.resolveCollision = function resolveCollision(player, ball) {
+    var xVelocityDiff = player.velocity.x - ball.velocity.x;
+    var yVelocityDiff = player.velocity.y - ball.velocity.y;
+
+    var xDist = ball.x - player.x;
+    var yDist = ball.y - player.y;
+
+    // Prevent accidental overlap of players
+    if (xVelocityDiff * xDist + yVelocityDiff * yDist >= 0) {
+
+        // Grab angle between the two colliding players
+        var angle = -Math.atan2(ball.y - player.y, ball.x - player.x);
+
+        // Store mass in var for better readability in collision equation
+        var m1 = player.mass;
+        var m2 = ball.mass;
+
+        // Velocity before equation
+        var u1 = rotate(player.velocity, angle);
+        var u2 = rotate(ball.velocity, angle);
+
+        // Velocity after 1d collision equation
+        var v1 = { x: u1.x * (m1 - m2) / (m1 + m2) + u2.x * 2 * m2 / (m1 + m2), y: u1.y };
+        var v2 = { x: u2.x * (m1 - m2) / (m1 + m2) + u1.x * 2 * m2 / (m1 + m2), y: u2.y };
+
+        // Final velocity after rotating axis back to original location
+        var vFinal1 = rotate(v1, -angle);
+        var vFinal2 = rotate(v2, -angle);
+
+        // Swap player velocities for realistic bounce effect
+        // player.velocity.x = vFinal1.x;
+        // player.velocity.y = vFinal1.y;
+
+        ball.velocity.x = u1.x;
+        ball.velocity.y = u1.y;
+    }
 };
 
 /***/ }),
@@ -354,6 +402,7 @@ var deleteHumanPlayer = function deleteHumanPlayer() {
   $("#welcome").addClass("hide");
   goalsPlayerOne = 0;
   goalsPlayerTwo = 0;
+  draw();
 };
 
 var deleteComputerPlayer = function deleteComputerPlayer() {
@@ -367,6 +416,7 @@ var deleteComputerPlayer = function deleteComputerPlayer() {
   $("#welcome").addClass("hide");
   goalsPlayerOne = 0;
   goalsPlayerTwo = 0;
+  draw();
 };
 
 $("body").keydown(_events_util.keyDownHandler);
@@ -384,9 +434,9 @@ var playerMove = function playerMove() {
     playerTwoY -= playerVelocity.y;
   } else if (_events_util.downPressed2 && playerTwoY < h - playerRadius - 5) {
     playerTwoY += playerVelocity.y;
-  } else if (_events_util.leftPressed2 && playerTwoX > playerRadius + 5) {
+  } else if (_events_util.leftPressed2 && playerTwoX > playerRadius + 55) {
     playerTwoX -= playerVelocity.x;
-  } else if (_events_util.rightPressed2 && playerTwoX < w - playerRadius - 5) {
+  } else if (_events_util.rightPressed2 && playerTwoX < w - playerRadius - 55) {
     playerTwoX += playerVelocity.x;
   }
 
@@ -394,9 +444,9 @@ var playerMove = function playerMove() {
     playerY -= playerVelocity.y;
   } else if (_events_util.downPressed && playerY < h - playerRadius - 5) {
     playerY += playerVelocity.y;
-  } else if (_events_util.leftPressed && playerX > playerRadius + 5) {
+  } else if (_events_util.leftPressed && playerX > playerRadius + 55) {
     playerX -= playerVelocity.x;
-  } else if (_events_util.rightPressed && playerX < w - playerRadius - 5) {
+  } else if (_events_util.rightPressed && playerX < w - playerRadius - 55) {
     playerX += playerVelocity.x;
   }
 };
@@ -404,47 +454,6 @@ var playerMove = function playerMove() {
 var moveKeepers = function moveKeepers() {
   if (keeperY > y + 125 || keeperY < y - 125) {
     dx = -dx;
-  }
-};
-
-var moveMan = function moveMan() {
-
-  if (ballX < x && ballY < y) {
-    if (computerPlayerVelocity.x > 0) {
-      computerPlayerVelocity.x *= -1;
-    }
-    if (computerPlayerVelocity.y > 0) {
-      computerPlayerVelocity.y *= -1;
-    }
-    player3X -= computerPlayerVelocity.x;
-    player3Y -= computerPlayerVelocity.y;
-  } else if (ballX < x && ballY > y) {
-    if (computerPlayerVelocity.x > 0) {
-      computerPlayerVelocity.x *= -1;
-    }
-    if (computerPlayerVelocity.y > 0) {
-      computerPlayerVelocity.y *= -1;
-    }
-    player3X -= computerPlayerVelocity.x;
-    player3Y += computerPlayerVelocity.y;
-  } else if (ballX > x && ballY < y) {
-    if (computerPlayerVelocity.x > 0) {
-      computerPlayerVelocity.x *= -1;
-    }
-    if (computerPlayerVelocity.y > 0) {
-      computerPlayerVelocity.y *= -1;
-    }
-    player3X += computerPlayerVelocity.x;
-    player3Y -= computerPlayerVelocity.y;
-  } else if (ballX > x && ballY > y) {
-    if (computerPlayerVelocity.x > 0) {
-      computerPlayerVelocity.x *= -1;
-    }
-    if (computerPlayerVelocity.y > 0) {
-      computerPlayerVelocity.y *= -1;
-    }
-    player3X += computerPlayerVelocity.x;
-    player3Y += computerPlayerVelocity.y;
   }
 };
 
@@ -513,14 +522,11 @@ var draw = function draw() {
   player3X += computerPlayerVelocity.x;
   player3Y += computerPlayerVelocity.y;
   keeperY += dx;
-  // moveMan();
 
   (0, _game.gameOver)(goalsPlayerOne, goalsPlayerTwo);
 
   requestAnimationFrame(draw);
 };
-
-draw();
 
 /***/ }),
 
@@ -556,6 +562,7 @@ var Player = function () {
     this.border = border;
     this.velocity = velocity;
     this.num = num;
+    this.mass = 1;
     this.draw();
   }
 
@@ -585,7 +592,7 @@ var Player = function () {
     key: 'shoot',
     value: function shoot(ball) {
       if ((0, _game.getDistance)(this.x, this.y, this.radius, ball.x, ball.y, ball.radius)) {
-        ball.velocity.x = -ball.velocity.x;
+        (0, _game.resolveCollision)(this, ball);
         console.log('x: ' + this.x + '--- y: ' + this.y + '  ball' + ball.x + ' ' + ball.y);
       }
     }
@@ -598,38 +605,36 @@ var Player = function () {
   }, {
     key: 'onField',
     value: function onField(x, y) {
-      if (this.x + this.velocity.x < x - 400 || this.x + this.velocity.x > x + 400) {
+      if (this.x < x - 400 || this.x > x + 400) {
         this.velocity.x *= -1;
       }
-      if (this.y + this.velocity.y < y - 200 || this.y + this.velocity.y > y + 200) {
+      if (this.y < y - 200 || this.y > y + 200) {
         this.velocity.y *= -1;
       }
     }
-  }, {
-    key: 'moveComputer',
-    value: function moveComputer(ball, x, y) {
-      if (this.velocity.x < 0) {
-        this.velocity.x *= -1;
-      }
-      if (this.velocity.y < 0) {
-        this.velocity.y *= -1;
-      }
-      // if (ball.x > x) {
-      //   this.velocity.x *= -1;
-      if (ball.x < x && ball.y < y) {
-        this.x -= this.velocity.x;
-        this.y -= this.velocity.y;
-      } else if (ball.x < x && ball.y > y) {
-        this.x -= this.velocity.x;
-        this.y += this.velocity.y;
-      } else if (ball.x > x && ball.y < y) {
-        this.x += this.velocity.x;
-        this.y -= this.velocity.y;
-      } else if (ball.x > x && ball.y > y) {
-        this.x += this.velocity.x;
-        this.y += this.velocity.y;
-      }
-    }
+
+    // moveComputer(ball, x, y) {
+    //   if (this.velocity.x < 0) {
+    //     this.velocity.x *= -1;
+    //   }
+    //   if (this.velocity.y < 0) {
+    //     this.velocity.y *= -1;
+    //   }
+    //   if (ball.x < x && ball.y < y) {
+    //     this.x -= this.velocity.x;
+    //     this.y -= this.velocity.y;
+    //   } else if (ball.x < x && ball.y > y) {
+    //     this.x -= this.velocity.x;
+    //     this.y += this.velocity.y;
+    //   } else if (ball.x > x && ball.y < y) {
+    //     this.x += this.velocity.x;
+    //     this.y -= this.velocity.y;
+    //   } else if (ball.x > x && ball.y > y) {
+    //     this.x += this.velocity.x;
+    //     this.y += this.velocity.y;
+    //   }
+    // }
+
   }]);
 
   return Player;
