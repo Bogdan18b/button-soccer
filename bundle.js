@@ -255,13 +255,12 @@ var playAgain = exports.playAgain = function playAgain() {
   document.location.reload();
 };
 
-var getDistance = exports.getDistance = function getDistance(x1, y1, radius1, x2, y2, radius2) {
-  var xDistance = x2 - x1;
-  var yDistance = y2 - y1;
-
-  var dist = Math.pow(xDistance, 2) + Math.pow(yDistance, 2);
-  var rad = Math.pow(radius1 + radius2 + 10, 2);
-  return dist <= rad ? true : false;
+var getDistance = exports.getDistance = function getDistance(player1, player2) {
+  var xDistance = player2.x - player1.x;
+  var yDistance = player2.y - player1.y;
+  var distance = Math.pow(xDistance, 2) + Math.pow(yDistance, 2);
+  var radius = Math.pow(player1.radius + player2.radius + 15, 2); // 15 is the lineWidth f the player
+  return distance <= radius;
 };
 
 /***/ }),
@@ -324,7 +323,7 @@ var keeperY = y - 20;
 
 var ballVelocity = {
   x: 10,
-  y: 7
+  y: 8
 };
 
 var computerPlayerVelocity = {
@@ -441,29 +440,29 @@ var draw = function draw() {
   goalkeeper1.shoot(ball);
   goalkeeper2.shoot(ball);
 
-  if ((0, _game.getDistance)(keeperOneX, keeperY, playerRadius, playerX, playerY, playerRadius)) {
+  if ((0, _game.getDistance)(goalkeeper1, player1)) {
     playerX += 5;
   }
-  if ((0, _game.getDistance)(keeperTwoX, keeperY, playerRadius, playerX, playerY, playerRadius)) {
+  if ((0, _game.getDistance)(goalkeeper2, player1)) {
     playerX -= 15;
   }
-  if ((0, _game.getDistance)(keeperTwoX, keeperY, playerRadius, playerTwoX, playerTwoY, playerTwoRadius)) {
+  if ((0, _game.getDistance)(goalkeeper2, player2)) {
     playerTwoX -= 5;
   }
-  if ((0, _game.getDistance)(keeperOneX, keeperY, playerRadius, playerTwoX, playerTwoY, playerTwoRadius)) {
+  if ((0, _game.getDistance)(goalkeeper1, player2)) {
     playerTwoX += 15;
   }
-  if ((0, _game.getDistance)(playerX, playerY, playerRadius, playerTwoX, playerTwoY, playerTwoRadius)) {
+  if ((0, _game.getDistance)(player1, player2)) {
     playerTwoX += 5;
     playerX -= 5;
   }
-  if ((0, _game.getDistance)(keeperTwoX, keeperY, playerRadius, player3X, player3Y, computerRadius)) {
+  if ((0, _game.getDistance)(goalkeeper2, player3)) {
     player3X -= 5;
   }
-  if ((0, _game.getDistance)(keeperOneX, keeperY, playerRadius, player3X, player3Y, computerRadius)) {
+  if ((0, _game.getDistance)(goalkeeper1, player3)) {
     player3X += 15;
   }
-  if ((0, _game.getDistance)(playerX, playerY, playerRadius, player3X, player3Y, computerRadius)) {
+  if ((0, _game.getDistance)(player1, player3)) {
     player3X += 5;
     playerX -= 5;
   }
@@ -552,8 +551,12 @@ var Player = function () {
   }, {
     key: "shoot",
     value: function shoot(ball) {
-      if ((0, _game.getDistance)(this.x, this.y, this.radius, ball.x, ball.y, ball.radius)) {
+      if ((0, _game.getDistance)(this, ball)) {
         ball.velocity.x *= -1;
+        var x = Math.pow(this.x - ball.x, 2);
+        var y = Math.pow(this.y - ball.y, 2);
+        var z = Math.pow(this.radius + ball.radius, 2);
+        console.log("d:" + (x + y) + "--- r:" + z);
       }
     }
   }, {
