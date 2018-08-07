@@ -6,7 +6,7 @@ You can try it [here](http://bogdanbobletec.us/button-soccer/index.html).
 ![soccer](https://raw.githubusercontent.com/Bogdan18b/button-soccer/master/assets/field.png)
 
 One of the things that took me a lot of time was drawing the field, the way I calculated the lines was by splitting the field in squares:
-
+```javaScript
           rightSideBigBox() {
             this.ctx.beginPath();
             this.ctx.moveTo(this.width - this.square, this.y/3);
@@ -24,9 +24,9 @@ One of the things that took me a lot of time was drawing the field, the way I ca
             this.ctx.lineTo(this.width - this.square, this.y + 3 * this.square);
             this.ctx.stroke();
           }
-
+```
   Another challenging part was the collision detection, for which I implemented the following function to accurately detect when a player hits the ball or collides with another player:
-
+```javaScript
           export const getDistance = (x1, y1, radius1 ,x2, y2, radius2) => {
             let xDistance = x2 - x1;
             let yDistance = y2 - y1;
@@ -35,5 +35,5 @@ One of the things that took me a lot of time was drawing the field, the way I ca
             let rad = Math.pow(radius1 + radius2 + 10, 2);
             return (dist <= rad) ? true : false;
           };
-
+```
 Future plans include improving the AI player and implementing the option to select a difficulty mode.
