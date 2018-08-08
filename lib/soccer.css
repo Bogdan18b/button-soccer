@@ -1,6 +1,5 @@
 #myCanvas {
   background-color: green;
-  display: block;
   margin: -200px auto;
 }
 
@@ -14,10 +13,6 @@
 
 body {
   background-color: navy;
-}
-
-html {
-  /* overflow: hidden; */
 }
 
 h1 {
@@ -125,6 +120,10 @@ p {
 
 .hide {
   display: none;
+}
+
+.block {
+  display: block;
 }
 
 audio {

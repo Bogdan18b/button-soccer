@@ -351,6 +351,7 @@ var deleteHumanPlayer = function deleteHumanPlayer() {
   playerTwoY = 0;
   playerTwoRadius = 0;
   $("#welcome").addClass("hide");
+  $("#myCanvas").removeClass("hide block");
   goalsPlayerOne = 0;
   goalsPlayerTwo = 0;
   draw();
@@ -365,6 +366,7 @@ var deleteComputerPlayer = function deleteComputerPlayer() {
     y: 0
   };
   $("#welcome").addClass("hide");
+  $("#myCanvas").toggleClass("hide block");
   goalsPlayerOne = 0;
   goalsPlayerTwo = 0;
   draw();
