@@ -351,7 +351,7 @@ var deleteHumanPlayer = function deleteHumanPlayer() {
   playerTwoY = 0;
   playerTwoRadius = 0;
   $("#welcome").addClass("hide");
-  $("#myCanvas").removeClass("hide block");
+  $("#myCanvas").toggleClass("hide block");
   goalsPlayerOne = 0;
   goalsPlayerTwo = 0;
   draw();
