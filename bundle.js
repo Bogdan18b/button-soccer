@@ -177,42 +177,41 @@ var leftPressed2 = exports.leftPressed2 = false;
 var rightPressed2 = exports.rightPressed2 = false;
 
 var keyDownHandler = exports.keyDownHandler = function keyDownHandler(e) {
-    if (e.keyCode === 87) {
+    if (e.keyCode === 38) {
         exports.upPressed = upPressed = true;
-    } else if (e.keyCode === 83) {
-        exports.downPressed = downPressed = true;
-    } else if (e.keyCode === 65) {
-        exports.leftPressed = leftPressed = true;
-    } else if (e.keyCode === 68) {
-        exports.rightPressed = rightPressed = true;
-    } else if (e.keyCode === 38) {
-        exports.upPressed2 = upPressed2 = true;
     } else if (e.keyCode === 40) {
-        exports.downPressed2 = downPressed2 = true;
+        exports.downPressed = downPressed = true;
     } else if (e.keyCode === 37) {
-        exports.leftPressed2 = leftPressed2 = true;
+        exports.leftPressed = leftPressed = true;
     } else if (e.keyCode === 39) {
+        exports.rightPressed = rightPressed = true;
+    } else if (e.keyCode === 87) {
+        exports.upPressed2 = upPressed2 = true;
+    } else if (e.keyCode === 83) {
+        exports.downPressed2 = downPressed2 = true;
+    } else if (e.keyCode === 65) {
+        exports.leftPressed2 = leftPressed2 = true;
+    } else if (e.keyCode === 68) {
         exports.rightPressed2 = rightPressed2 = true;
     }
 };
 
 var keyUpHandler = exports.keyUpHandler = function keyUpHandler(e) {
-    //i used switch before i had issues when presseing 2 keys in the same time
-    if (e.keyCode === 87) {
+    if (e.keyCode === 38) {
         exports.upPressed = upPressed = false;
-    } else if (e.keyCode === 83) {
-        exports.downPressed = downPressed = false;
-    } else if (e.keyCode === 65) {
-        exports.leftPressed = leftPressed = false;
-    } else if (e.keyCode === 68) {
-        exports.rightPressed = rightPressed = false;
-    } else if (e.keyCode === 38) {
-        exports.upPressed2 = upPressed2 = false;
     } else if (e.keyCode === 40) {
-        exports.downPressed2 = downPressed2 = false;
+        exports.downPressed = downPressed = false;
     } else if (e.keyCode === 37) {
-        exports.leftPressed2 = leftPressed2 = false;
+        exports.leftPressed = leftPressed = false;
     } else if (e.keyCode === 39) {
+        exports.rightPressed = rightPressed = false;
+    } else if (e.keyCode === 87) {
+        exports.upPressed2 = upPressed2 = false;
+    } else if (e.keyCode === 83) {
+        exports.downPressed2 = downPressed2 = false;
+    } else if (e.keyCode === 65) {
+        exports.leftPressed2 = leftPressed2 = false;
+    } else if (e.keyCode === 68) {
         exports.rightPressed2 = rightPressed2 = false;
     }
 };
@@ -555,10 +554,6 @@ var Player = function () {
     value: function shoot(ball) {
       if ((0, _game.getDistance)(this, ball)) {
         ball.velocity.x *= -1;
-        var x = Math.pow(this.x - ball.x, 2);
-        var y = Math.pow(this.y - ball.y, 2);
-        var z = Math.pow(this.radius + ball.radius, 2);
-        console.log("d:" + (x + y) + "--- r:" + z);
       }
     }
   }, {
